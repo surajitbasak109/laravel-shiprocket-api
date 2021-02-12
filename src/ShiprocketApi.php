@@ -17,12 +17,26 @@ use Seshac\Shiprocket\Traits\Authenticate;
 class ShiprocketApi
 {
     use Authenticate;
-    
+
     public $client;
-  
+
     public function __construct(ShiprocketClient $client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * Get the login details including token (valid for 24 hours)
+     *
+     * @return mixed
+     */
+
+    public function token()
+    {
+        return $this->login([
+            'email' => config('shiprocket.credentials.email'),
+            'password' => config('shiprocket.credentials.password')
+        ]);
     }
 
     /**
@@ -69,7 +83,7 @@ class ShiprocketApi
     {
         return new PickupResource($this->client, $token);
     }
-    
+
     /**
      * Courier related wrapper class
      *
@@ -137,11 +151,11 @@ class ShiprocketApi
     }
 
     /**
-    * Courier related wrapper class
-    *
-    * @param string $token
-    * @return mixed
-    */
+     * Courier related wrapper class
+     *
+     * @param string $token
+     * @return mixed
+     */
     public function warehouse(string $token)
     {
         return new WarehouseResource($this->client, $token);
